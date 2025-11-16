@@ -1,3 +1,4 @@
+import type { LoginFormValues } from "@/components/const/types";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -8,11 +9,6 @@ import { Eye, EyeOff, Lock, Mail, User, Github } from "lucide-react";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-
-interface LoginFormValues {
-  email: string;
-  password: string;
-}
 
 const initialValues: LoginFormValues = {
   email: "",
@@ -208,7 +204,7 @@ const LoginPage: React.FC = () => {
         {/* Social Login Divider */}
         <div className="my-6">
           <div className="relative">
-            <Separator className="absolute inset-0 flex items-center" />
+            <Separator className="absolute top-[50%] flex items-center" />
             <div className="relative flex justify-center text-sm">
               <span className="px-2 bg-white/80 text-gray-500">
                 Or continue with

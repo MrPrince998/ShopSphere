@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { login, register } from "../api/auth";
+import { login, logout, register } from "../api/auth";
 import type {
   LoginCredentials,
   RegisterCredentials,
 } from "@/components/const/types";
 
-const queryClient = useQueryClient();
-
 export const Login = (credientials: LoginCredentials) => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: () => login(credientials),
     onSuccess: () => {
@@ -17,6 +17,8 @@ export const Login = (credientials: LoginCredentials) => {
 };
 
 export const Register = (credientials: RegisterCredentials) => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: () => register(credientials),
     onSuccess: () => {
@@ -26,10 +28,12 @@ export const Register = (credientials: RegisterCredentials) => {
 };
 
 export const Logout = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: () => {
-      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
-      return Promise.resolve();
+    mutationFn: () => logout(),
+    onSuccess: () => {
+      queryClient.removeQueries({ queryKey: ["currentUser"] });
     },
   });
 };
