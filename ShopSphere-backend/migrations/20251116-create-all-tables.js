@@ -16,12 +16,12 @@ module.exports = {
     await queryInterface.createTable("Users", {
       id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       username: { type: Sequelize.STRING, allowNull: false, unique: true },
-      fullName: { type: Sequelize.STRING, allowNull: false },
+      fullName: { type: Sequelize.STRING, allowNull: true },
       email: { type: Sequelize.STRING, allowNull: false, unique: true },
-      dob: { type: Sequelize.DATE, allowNull: false },
+      dob: { type: Sequelize.DATE, allowNull: true },
       gender: {
         type: Sequelize.ENUM("male", "female", "other"),
-        allowNull: false,
+        allowNull: true,
       },
       profileBio: { type: Sequelize.TEXT, allowNull: true },
       password: { type: Sequelize.STRING, allowNull: false },
@@ -39,7 +39,7 @@ module.exports = {
         allowNull: false,
         defaultValue: "customer",
       },
-      phoneNumber: { type: Sequelize.STRING, allowNull: false, unique: true },
+      phoneNumber: { type: Sequelize.STRING, allowNull: true, unique: true },
       profilePicture: { type: Sequelize.STRING, allowNull: true },
       status: {
         type: Sequelize.ENUM("active", "inactive", "blocked"),
@@ -621,7 +621,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    // Drop in reverse order
+    // Drop in reverse order, accounting for foreign key dependencies
     await queryInterface.dropTable("Messages");
     await queryInterface.dropTable("Notifications");
     await queryInterface.dropTable("Points");
@@ -640,7 +640,7 @@ module.exports = {
     await queryInterface.dropTable("Coupons");
     await queryInterface.dropTable("Tags");
     await queryInterface.dropTable("Categories");
+    await queryInterface.dropTable("Users"); // Drop Users before Addresses
     await queryInterface.dropTable("Addresses");
-    await queryInterface.dropTable("Users");
   },
 };

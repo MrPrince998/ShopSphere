@@ -14,7 +14,7 @@ const User = sequelize.define("User", {
   },
   fullName: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   email: {
     type: DataTypes.STRING,
@@ -23,11 +23,11 @@ const User = sequelize.define("User", {
   },
   dob: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
   },
   gender: {
     type: DataTypes.ENUM("male", "female", "other"),
-    allowNull: false,
+    allowNull: true,
   },
   profileBio: {
     type: DataTypes.TEXT,
@@ -51,7 +51,7 @@ const User = sequelize.define("User", {
   },
   failedLoginAttempts: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
     defaultValue: 0,
     max: 5,
   },
@@ -66,7 +66,7 @@ const User = sequelize.define("User", {
   },
   phoneNumber: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
     unique: true,
   },
   profilePicture: {
@@ -91,7 +91,7 @@ const User = sequelize.define("User", {
   notificationEnabled: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
-    defaultValue: true,
+    defaultValue: false,
   },
   isVerified: {
     type: DataTypes.BOOLEAN,
@@ -113,11 +113,9 @@ const User = sequelize.define("User", {
   },
   twoFactorSecret: {
     type: DataTypes.STRING,
-    allowNull: true,
   },
   twoFactoryExpires: {
     type: DataTypes.DATE,
-    allowNull: true,
   },
   lastLoginAt: {
     type: DataTypes.DATE,
@@ -125,7 +123,6 @@ const User = sequelize.define("User", {
   },
   isDeleted: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
     defaultValue: false,
   },
   deletedAt: {
@@ -139,7 +136,7 @@ const User = sequelize.define("User", {
   },
   updatedAt: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
     defaultValue: DataTypes.NOW,
   },
 });
