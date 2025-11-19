@@ -13,9 +13,11 @@ import type { RegisterFormValues } from "@/components/const/types";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, Github, Lock, Mail, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "react-toastify";
+import { Register } from "@/lib/queries/auth";
 
 const initialValues: RegisterFormValues = {
   username: "",
@@ -41,12 +43,33 @@ const RegisterPage: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
 
+  const navigate = useNavigate();
+
+  const { mutate: registerUser, isPending } = Register();
+
   const handleSocialLogin = (provider: string) => {
     console.log(`Logging in with ${provider}`);
   };
 
   const handleSubmit = (values: RegisterFormValues) => {
-    console.log("Form data", values);
+    let data = {
+      username: values.username || "",
+      email: values.email || "",
+      password: values.password || "",
+    };
+
+    registerUser(data, {
+      onSuccess: () => {
+        toast.success("Registration sucessfull!");
+        navigate("/auth/login");
+      },
+      onError: (error: any) => {
+        toast.error(
+          error.response?.data?.message ||
+            "Registration failed. Please try again."
+        );
+      },
+    });
   };
   return (
     <div className="w-full min-h-full grid grid-cols-1 md:grid-cols-2">
@@ -57,15 +80,15 @@ const RegisterPage: React.FC = () => {
           <p className="text-lg">Your Ulitmate Shopping Destination</p>
         </div>
         <div className="grid grid-cols-3 gap-4 w-full mb-6">
-          <div className="w-40 h-40 rounded-2xl bg-background/30 flex flex-col items-center justify-center">
+          <div className="w-32 h-32 rounded-2xl bg-background/30 flex flex-col items-center justify-center">
             <FaGift className="text-white" size={40} />
             <p className="mt-2 text-center">Exclusive Deals</p>
           </div>
-          <div className="w-40 h-40 rounded-2xl bg-background/30 flex flex-col items-center justify-center">
+          <div className="w-32 h-32 rounded-2xl bg-background/30 flex flex-col items-center justify-center">
             <TbTruckDelivery className="text-white" size={40} />
             <p className="mt-2 text-center">Fast Delivery</p>
           </div>
-          <div className="w-40 h-40 rounded-2xl bg-background/30 flex flex-col items-center justify-center">
+          <div className="w-32 h-32 rounded-2xl bg-background/30 flex flex-col items-center justify-center">
             <FaShieldAlt className="text-white" size={40} />
             <p className="mt-2 text-center">Secure Payment</p>
           </div>
@@ -298,10 +321,19 @@ const RegisterPage: React.FC = () => {
               <Button
                 type="submit"
                 className="w-full bg-sky-600 text-white py-2 px-4 rounded-md hover:bg-sky-700 disabled:bg-gray-400"
-                disabled={!agreeTerms}
+                disabled={!agreeTerms || isPending}
               >
-                <FaUserPlus className="inline-block" />
-                Create Account
+                {isPending ? (
+                  <>
+                    <FaUserPlus className="inline-block" />
+                    Create Account
+                  </>
+                ) : (
+                  <>
+                    <FaUserPlus className="inline-block" />
+                    Creating Account..
+                  </>
+                )}
               </Button>
 
               {/* Social Login Divider */}

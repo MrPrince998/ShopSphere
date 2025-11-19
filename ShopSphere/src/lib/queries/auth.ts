@@ -5,22 +5,22 @@ import type {
   RegisterCredentials,
 } from "@/components/const/types";
 
-export const Login = (credientials: LoginCredentials) => {
+export const Login = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => login(credientials),
+    mutationFn: (credentials: LoginCredentials) => login(credentials),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
     },
   });
 };
 
-export const Register = (credientials: RegisterCredentials) => {
+export const Register = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => register(credientials),
+    mutationFn: (credientials: RegisterCredentials) => register(credientials),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
     },

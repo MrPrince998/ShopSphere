@@ -4,10 +4,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Login } from "@/lib/queries/auth";
 import { Formik, Form, ErrorMessage, Field } from "formik";
 import { Eye, EyeOff, Lock, Mail, User, Github } from "lucide-react";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 const initialValues: LoginFormValues = {
@@ -27,22 +29,21 @@ const validationSchema = Yup.object({
 const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  const { mutate: userLogin, isPending: isLoading } = Login();
   const handleSubmit = async (values: LoginFormValues) => {
-    setIsLoading(true);
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      console.log("Form Submitted:", values);
-      // Navigate to dashboard or home page after successful login
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Login error:", error);
-    } finally {
-      setIsLoading(false);
-    }
+    console.log(values);
+    userLogin(values, {
+      onSuccess: () => {
+        navigate("/dashboard");
+      },
+      onError: (error: any) => {
+        toast.error(
+          error?.response?.data?.message || "Login failed. Please try again."
+        );
+      },
+    });
   };
 
   const handleSocialLogin = (provider: string) => {
